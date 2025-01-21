@@ -1,0 +1,135 @@
+/* CSS Code */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #0d1117;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align items at the top */
+  align-items: center;
+  gap: 20px; /* Adds spacing between cards */
+  margin: 77px 0; /* Adds 30px margin at the top and bottom */
+  padding: 0 77px; /* Adds padding on the sides */
+}
+
+
+.profile-card, .resume-card, .projects, .contact {
+  width: 300px; /* Fixed width for all cards */
+  text-align: center;
+  background: rgba(160, 192, 211, 0.683);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px;
+  }
+
+  .profile-card, .resume-card, .projects, .contact{
+    width: 76%; 
+  }
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid #fff;
+}
+
+.profile-card h1 {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.profile-card p {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.social-links {
+  margin: 20px 0;
+}
+
+.social-links .social-icon {
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 20px;
+  border: 2px solid transparent;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.social-links .social-icon:hover {
+  border-color: #0cf;
+  color: #0cf;
+  transform: scale(1.1);
+}
+
+.skills {
+  margin-top: 20px;
+}
+
+.skills .skill-tag {
+  display: inline-block;
+  background: #1c1f26;
+  padding: 8px 15px;
+  border-radius: 15px;
+  margin: 5px;
+  font-size: 14px;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.skills .skill-tag:hover {
+  border-color: #fff;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.resume-card h2, .projects h2, .contact h2,h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.resume-card p, .projects p, .contact p{
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.resume-button, .contact-button {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #0cf;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 15px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.resume-button:hover, .contact-button:hover {
+  background-color: #08a;
+  transform: scale(1.1);
+}

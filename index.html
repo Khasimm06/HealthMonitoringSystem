@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Monitoring System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Health Monitoring System</h1>
+  </header>
+
+  <main>
+    <section id="readings">
+      <h2>Health Parameters</h2>
+      <p>Body Temperature: <span id="temperature">--</span> °C</p>
+      <p>Heart Rate: <span id="heartRate">--</span> BPM</p>
+    </section>
+
+    <section id="recommendations">
+      <h2>Dietary Recommendations</h2>
+      <ul id="dietList">
+        <li>Maintain a balanced diet rich in fruits and vegetables.</li>
+        <li>Stay hydrated with at least 8 glasses of water daily.</li>
+      </ul>
+    </section>
+
+    <section id="search">
+      <h2>Search for Medicines</h2>
+      <input type="text" id="searchInput" placeholder="Enter a symptom (e.g., cough)">
+      <button onclick="searchMedicines()">Search</button>
+      <div id="medicineResults"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Health Monitoring System - <a href="designer&developer.html"> H6</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

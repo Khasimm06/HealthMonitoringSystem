@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khasimvali - Profile Card</title>
+  <link rel="stylesheet" href="profile.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="background">
+    <canvas id="particleCanvas"></canvas>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-card">
+      <img src="profile1.jpg" alt="Profile Picture" class="profile-pic">
+      <h1>Khasimvali Shaik</h1>
+      <p>@Web Developer</p>
+      <div class="social-links">
+        <a href="https://www.facebook.com/khasim.vali.142892" class="social-icon"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/khasim_.06/profilecard/?igsh=d3k2eGRpdHRycGFk" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="mailto:kasimvali7862003@gmail.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/in/khasimvali-shaik/" class="social-icon"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <div class="skills">
+        <span class="skill-tag">UI/UX</span>
+        <span class="skill-tag">JS</span>
+        <span class="skill-tag">MySQL</span><br>
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">PHP</span><br>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">React</span>
+      </div>
+    </div>
+
+    <div class="resume-card">
+      <h2>View Resume</h2>
+      <p>Click the button below to view my resume.</p>
+      <a href="https://drive.google.com/file/d/1CwT1ZRyZbWlze69iQ69D3cXiAXKmucYy/view?usp=sharing" target="_blank" class="resume-button">View Resume</a>
+    </div>
+
+    <div class="projects">
+      <h2>Project 1</h2>
+      <p>IEEE - CONFERENCE</p>
+      <a href="https://ieeelbrceh6.tiiny.site/" class="contact-button">Conference Link</a><br><br>
+      <h2>Project 2</h2>
+      <p>MYMUSIC - MYSTUDIES</p>
+      <a href="https://mymusicmystudiesh6.42web.io/?i=1" class="contact-button">Website Link</a>
+    </div>
+    
+    <div class="contact">
+      <h2>For Custom Websites</h2>
+      <p>If you want any type of custom Website, Contact me..</p>
+      <h3>+91 9908780094</h3>
+    </div>
+  </div>
+
+  
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    class Particle {
+      constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocityX = Math.random() * 2 - 1;
+        this.velocityY = Math.random() * 2 - 1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        if (this.x < 0 || this.x > canvas.width) this.velocityX = -this.velocityX;
+        if (this.y < 0 || this.y > canvas.height) this.velocityY = -this.velocityY;
+
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+
+        this.draw();
+      }
+    }
+
+    function createParticles() {
+      for (let i = 0; i < 100; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const radius = Math.random() * 3 + 1;
+        const color = '#ffffff';
+        particles.push(new Particle(x, y, radius, color));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => particle.update());
+      requestAnimationFrame(animate);
+    }
+
+    createParticles();
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      createParticles();
+    });
+  </script>
+</body>
+</html>
