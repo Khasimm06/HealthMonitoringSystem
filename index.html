@@ -19,12 +19,6 @@
       <div id="medicineResults"></div>
     </section>
 
-    <section id="readings">
-      <h2>Health Parameters</h2>
-      <p>Body Temperature: <span id="temperature">--</span> °C</p>
-      <p>Heart Rate: <span id="heartRate">--</span> BPM</p>
-    </section>
-
     <section id="recommendations">
       <h2>Dietary Recommendations</h2>
       <ul id="dietList">
@@ -32,8 +26,14 @@
         <li>Stay hydrated with at least 8 glasses of water daily.</li>
       </ul>
     </section>
+    
   </main>
-
+  <section id="topics">
+    <div class="topic" onclick="navigateTo('Heart Beat Monitoring.html')"> Heart Beat Monitoring</div>
+    <div class="topic" onclick="navigateTo('Temp.html')"> Temperature Monitoring</div>
+    <div class="topic" onclick="navigateTo('ECG.html')"> ECG - Monitoring</div>
+    <div class="topic" onclick="navigateTo('bmi.html')"> BMI - Calculator</div>
+  </section>
   <footer>
     <p>© 2025 Health Monitoring System - <a href="designer&developer.html"> H6</a></p>
   </footer>
@@ -73,6 +73,10 @@
 
     // Fetch Data Every 5 Seconds
     setInterval(fetchSensorData, 5000);
+
+    function navigateTo(page) {
+    window.location.href = page;
+  }
   </script>
 </body>
 </html>
