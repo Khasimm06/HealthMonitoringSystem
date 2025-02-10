@@ -48,6 +48,76 @@ h2 {
   background-color: #005bb5;
 }
 
+/* Topic Button Styling */
+/* Section Styling */
+#topics {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: #f4f4f9; 
+}
+
+
+.topic {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.topic:hover {
+  background: #0078d7;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* BMI Calculator Section */
+#bmi-calculator {
+  background: #f4f4f9; /* Light grey background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+#bmi-calculator input {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#bmi-calculator button {
+  background: #0078d7;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#bmi-calculator button:hover {
+  background: #005bb5;
+}
+
+#bmi-result {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+#bmi-category {
+  font-weight: bold;
+  color: #0078d7;
+}
+
+
 footer {
   text-align: center;
   padding: 0.25rem;
