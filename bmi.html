@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI - Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>BMI - Calculator</h1>
+  </header>
+
+  <main>
+
+       <section id="bmi-calculator">
+        <h2>BMI Calculator</h2>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Enter your weight" required>
+        
+        <label for="height">Height (m):</label>
+        <input type="number" id="height" placeholder="Enter your height" step="0.01" required>
+        
+        <button onclick="calculateBMI()">Calculate</button>
+        
+        <p>Your BMI: <span id="bmi-result">--</span></p>
+        <p id="bmi-category"></p>
+      </section>
+      
+    <section id="recommendations">
+      <h2>Dietary Recommendations</h2>
+      <ul id="dietList">
+        <li>Maintain a balanced diet rich in fruits and vegetables.</li>
+        <li>Stay hydrated with at least 8 glasses of water daily.</li>
+      </ul>
+    </section>
+    
+    <section id="search">
+        <h2>Search for Medicines</h2>
+        <input type="text" id="searchInput" placeholder="Enter a symptom (e.g., cough)">
+        <button onclick="searchMedicines()">Search</button>
+        <div id="medicineResults"></div>
+      </section>
+  </main>
+  <footer>
+    <p>© 2025 Health Monitoring System - <a href="designer&developer.html"> H6</a></p>
+  </footer>
+
+  <script>
+    // Simulate a medicines database
+    const medicinesDatabase = {
+      "cough": ["Dextromethorphan", "Guaifenesin", "Honey Lemon Cough Relief"],
+      "fever": ["Fever Reducer X", "Cold & Flu Relief", "Paracetamol"],
+      "headache": ["Painkiller Y", "Aspirin Z", "Ibuprofen"]
+    };
+
+    // Search for medicines based on the symptom
+    function searchMedicines() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const resultDiv = document.getElementById("medicineResults");
+      
+      if (medicinesDatabase[searchTerm]) {
+        const medicines = medicinesDatabase[searchTerm];
+        resultDiv.innerHTML = `<h3>Medicines for ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3><ul>${medicines.map(medicine => `<li>${medicine}</li>`).join("")}</ul>`;
+      } else {
+        resultDiv.innerHTML = "<p>No medicines found for this symptom. Please try again.</p>";
+      }
+    }
+
+    // Fetch sensor data (dummy values here for example)
+    async function fetchSensorData() {
+      try {
+        const response = await fetch("http://192.168.1.100/data"); // Replace with your ESP32 IP
+        const data = await response.json();
+        document.getElementById("temperature").textContent = data.temperature.toFixed(1);
+        document.getElementById("heartRate").textContent = data.heartRate.toFixed(1);
+      } catch (error) {
+        console.error("Error fetching sensor data:", error);
+      }
+    }
+
+    // Fetch Data Every 5 Seconds
+    setInterval(fetchSensorData, 5000);
+
+  function calculateBMI() {
+    let weight = parseFloat(document.getElementById("weight").value);
+    let height = parseFloat(document.getElementById("height").value);
+    let bmiResult = document.getElementById("bmi-result");
+    let bmiCategory = document.getElementById("bmi-category");
+
+    if (weight > 0 && height > 0) {
+      let bmi = weight / (height * height);
+      bmiResult.textContent = bmi.toFixed(2);
+
+      // Determine BMI Category
+      if (bmi < 18.5) {
+        bmiCategory.textContent = "Underweight";
+        bmiCategory.style.color = "orange";
+      } else if (bmi >= 18.5 && bmi < 24.9) {
+        bmiCategory.textContent = "Normal Weight";
+        bmiCategory.style.color = "green";
+      } else if (bmi >= 25 && bmi < 29.9) {
+        bmiCategory.textContent = "Overweight";
+        bmiCategory.style.color = "red";
+      } else {
+        bmiCategory.textContent = "Obese";
+        bmiCategory.style.color = "darkred";
+      }
+    } else {
+      bmiResult.textContent = "--";
+      bmiCategory.textContent = "Please enter valid values";
+      bmiCategory.style.color = "black";
+    }
+  }
+
+
+  </script>
+</body>
+</html>
