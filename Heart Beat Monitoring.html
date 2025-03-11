@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A real-time health monitoring system tracking heart rate and body temperature, providing dietary recommendations.">
+  <link rel="icon" href="favicon.ico"> <!-- Add a favicon -->
+  <title>Health Monitoring System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Health Monitoring System</h1>
+  </header>
+
+  <main>
+
+    <!-- Health Parameters Display -->
+    <section id="readings">
+      <h2>Health Parameters</h2>
+      <p><strong>Adults (18-65 years)</strong></p>
+      <p>Heart Rate: <span id="heartRate">Loading...</span> BPM</p>
+      <p id="heartCondition"></p>
+    </section>
+
+    <!-- Dietary Recommendations -->
+    <section id="recommendations">
+      <h2>Dietary Recommendations</h2>
+      <ul id="dietList">
+        <li>Maintain a balanced diet rich in fruits and vegetables.</li>
+        <li>Stay hydrated with at least 8 glasses of water daily.</li>
+      </ul>
+      <div id="heartHealthDiet" style="display: none;">
+        <h3>Good Foods for Heart Health:</h3>
+        <ul>
+          <li>Oats and Whole Grains</li>
+          <li>Fatty Fish (Salmon, Tuna, Mackerel)</li>
+          <li>Leafy Greens (Spinach, Kale)</li>
+          <li>Nuts (Almonds, Walnuts)</li>
+          <li>Berries (Blueberries, Strawberries)</li>
+          <li>Dark Chocolate (in moderation)</li>
+        </ul>
+      </div>
+      <div id="medicationAdvice" style="display: none; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+        <strong>High Heart Rate (Tachycardia) Advice:</strong>
+        <p>If your heart rate is consistently high, consult a doctor. Common medications include:</p>
+        <ul>
+            <li><b>Beta-Blockers</b> (e.g., Metoprolol, Propranolol) - Slows the heart rate.</li>
+            <li><b>Calcium Channel Blockers</b> (e.g., Diltiazem, Verapamil) - Lowers blood pressure.</li>
+            <li><b>Anti-Arrhythmic Drugs</b> (e.g., Amiodarone, Flecainide) - Used for irregular heart rhythms.</li>
+            <li><b>Ivabradine</b> - Lowers heart rate without affecting blood pressure.</li>
+            <li><b>Digoxin</b> - Strengthens heart contractions and slows heart rate.</li>
+        </ul>
+        <p><strong>Note:</strong> Always consult a doctor before taking any medication. Lifestyle changes like deep breathing, hydration, and avoiding caffeine/nicotine can also help.</p>
+    </div>
+    
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Health Monitoring System - <a href="designer&developer.html">H6</a></p>
+  </footer>
+<script>
+  async function fetchSensorData() {
+    try {
+        const response = await fetch("http://192.168.0.103"); // Replace with your ESP32's IP
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Received Data:", data); // Debugging log
+
+        // ✅ Update Heart Rate (Check if exists in response)
+        if (data.heartRate !== undefined) {
+            document.getElementById("heartRate").innerText = data.heartRate.toFixed(2) + " BPM";
+            analyzeHeartRate(data.heartRate);
+        } else {
+            document.getElementById("heartRate").innerText = "N/A";
+        }
+
+        // ✅ Update Temperature (Check if exists in response)
+        if (data.temperature !== undefined) {
+            document.getElementById("temperature").innerText = data.temperature.toFixed(2) + " °C";
+            analyzeTemperature(data.temperature);
+        } else {
+            document.getElementById("temperature").innerText = "N/A";
+        }
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("heartRate").innerText = "Connection Error";
+        document.getElementById("temperature").innerText = "Connection Error";
+    }
+}
+
+// ✅ Analyze Heart Rate and Provide Feedback
+function analyzeHeartRate(heartRate) {
+    const conditionText = document.getElementById("heartCondition");
+    const heartHealthDiet = document.getElementById("heartHealthDiet");
+    const medicationAdvice = document.getElementById("medicationAdvice");
+
+    if (heartRate >= 60 && heartRate <= 100) {
+        conditionText.innerHTML = "<span style='color: green;'>Normal Heart Rate ✅</span>";
+        heartHealthDiet.style.display = "none";
+        medicationAdvice.style.display = "none"; // Hide medication advice
+    } else if (heartRate < 60) {
+        conditionText.innerHTML = "<span style='color: blue;'>Low Heart Rate ⚠️ - Consider exercise and hydration.</span>";
+        heartHealthDiet.style.display = "block";
+        medicationAdvice.style.display = "none"; // Hide medication advice
+    } else {
+        conditionText.innerHTML = "<span style='color: red;'>High Heart Rate ⚠️ - Rest and monitor.</span>";
+        heartHealthDiet.style.display = "block";
+        medicationAdvice.style.display = "block"; // Show medication advice
+
+        // ✅ Display medication advice when heart rate is high
+        medicationAdvice.innerHTML = `
+            <b>⚕️ High Heart Rate Medication Advice:</b><br>
+            If your heart rate is consistently high (tachycardia), the best medication depends on the underlying cause and should be taken only under a doctor's prescription.<br>
+            <ul>
+                <li><b>Beta-Blockers</b> (e.g., Metoprolol, Propranolol, Atenolol) - Slows heart rate.</li>
+                <li><b>Calcium Channel Blockers</b> (e.g., Diltiazem, Verapamil) - Helps lower blood pressure.</li>
+                <li><b>Anti-Arrhythmic Drugs</b> (e.g., Amiodarone, Flecainide) - Used for irregular heart rhythms.</li>
+                <li><b>Ivabradine</b> - Reduces heart rate without affecting blood pressure.</li>
+                <li><b>Digoxin</b> - Strengthens heart contractions and slows heart rate.</li>
+            </ul>
+            <b>Important Notes:</b><br>
+            - Always consult a doctor before taking any medication.<br>
+            - High heart rate can be caused by stress, dehydration, fever, thyroid issues, or heart conditions.<br>
+            - Lifestyle changes like deep breathing, hydration, and avoiding stimulants (caffeine, nicotine) can also help.<br>
+        `;
+    }
+}
+
+// ✅ Analyze Temperature and Provide Feedback
+function analyzeTemperature(temperature) {
+    const tempConditionText = document.getElementById("tempCondition");
+
+    if (temperature >= 36.1 && temperature <= 37.5) {
+        tempConditionText.innerHTML = "<span style='color: green;'>Normal Temperature ✅</span>";
+    } else if (temperature < 36.1) {
+        tempConditionText.innerHTML = "<span style='color: blue;'>Low Temperature ⚠️ - Keep warm.</span>";
+    } else {
+        tempConditionText.innerHTML = "<span style='color: red;'>Fever Detected 🔥 - Stay hydrated & consult a doctor.</span>";
+    }
+}
+
+// ✅ Fetch Data Every 20 Seconds
+setInterval(fetchSensorData, 20000);
+
+// ✅ Fetch Data When Page Loads
+fetchSensorData();
+
+
+</script>
+
+</body>
+</html>
