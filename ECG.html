@@ -1,78 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ECG - Monitoring</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      font-size: 24px;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      background: white;
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+      width: 80%;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      background-color: #1d6ddd;
+      color: white;
+      padding: 10px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+    .alert {
+      color: red;
+      font-weight: bold;
+    }
+    .normal {
+      color: green;
+      font-weight: bold;
+    }
+    .note {
+      color: rgb(255, 42, 0);
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>ECG Monitoring</h1>
+    <h2>ECG Monitoring</h2>
   </header>
 
   <main>
-
     <section id="readings">
-      <h2>Health Parameters</h2>
-      <p>ECG - Monitoring : <span id="temperature">--</span> mm</p>
+      <h3>Health Parameters</h3>
+      <p>Heart Rate: <span id="heartRate">--</span> BPM</p>
+      <p id="status" class="normal">--</p>
     </section>
 
     <section id="recommendations">
-      <h2>Dietary Recommendations</h2>
+      <h3>Dietary Recommendations & Medicines for Relief</h3>
       <ul id="dietList">
-        <li>Maintain a balanced diet rich in fruits and vegetables.</li>
+        <li>Eat heart-healthy foods like fruits, vegetables, and whole grains.</li>
+        <li>Limit salt and caffeine intake.</li>
         <li>Stay hydrated with at least 8 glasses of water daily.</li>
       </ul>
+      <h3>Medicine for Relief:</h3>
+      <p id="medicineForRelief">No medicine required. Stay healthy! 🥦</p>
     </section>
-    
+
     <section id="search">
-        <h2>Search for Medicines</h2>
-        <input type="text" id="searchInput" placeholder="Enter a symptom (e.g., cough)">
-        <button onclick="searchMedicines()">Search</button>
-        <div id="medicineResults"></div>
-      </section>
+      <h2>Search for Medicines</h2>
+      <input type="text" id="searchInput" placeholder="Enter a symptom (e.g., headache)">
+      <button onclick="searchMedicines()">Search</button>
+      <div id="medicineResults"></div>
+    </section>
+
+    <p class="note">⚠️ Note: These medicines are for temporary relief. Please visit a hospital and consult a doctor.</p>
   </main>
+
   <footer>
     <p>© 2025 Health Monitoring System - <a href="designer&developer.html"> H6</a></p>
   </footer>
 
   <script>
-    // Simulate a medicines database
     const medicinesDatabase = {
       "cough": ["Dextromethorphan", "Guaifenesin", "Honey Lemon Cough Relief"],
-      "fever": ["Fever Reducer X", "Cold & Flu Relief", "Paracetamol"],
-      "headache": ["Painkiller Y", "Aspirin Z", "Ibuprofen"]
+      "fever": ["Paracetamol", "Ibuprofen", "Cold & Flu Relief"],
+      "headache": ["Aspirin", "Ibuprofen", "Painkiller Y"],
+      "low heart rate": ["Atropine", "Isoprenaline", "Dopamine"],
+      "high heart rate": ["Beta Blockers", "Calcium Channel Blockers", "Anti-arrhythmic Drugs"]
     };
-
-    // Search for medicines based on the symptom
+  
     function searchMedicines() {
       const searchTerm = document.getElementById("searchInput").value.toLowerCase();
       const resultDiv = document.getElementById("medicineResults");
-      
+  
       if (medicinesDatabase[searchTerm]) {
         const medicines = medicinesDatabase[searchTerm];
-        resultDiv.innerHTML = `<h3>Medicines for ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3><ul>${medicines.map(medicine => `<li>${medicine}</li>`).join("")}</ul>`;
+        resultDiv.innerHTML = `<h3>Medicines for ${searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)}:</h3>
+          <ul>${medicines.map(med => `<li>${med}</li>`).join("")}</ul>`;
       } else {
         resultDiv.innerHTML = "<p>No medicines found for this symptom. Please try again.</p>";
       }
     }
-
-    // Fetch sensor data (dummy values here for example)
-    async function fetchSensorData() {
+  
+    async function updateHeartRateFromSensor() {
       try {
-        const response = await fetch("http://192.168.1.100/data"); // Replace with your ESP32 IP
+        const response = await fetch("http://192.168.114.90"); 
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const data = await response.json();
-        document.getElementById("temperature").textContent = data.temperature.toFixed(1);
-        document.getElementById("heartRate").textContent = data.heartRate.toFixed(1);
+        const heartRate = data.heartRate;
+  
+        document.getElementById("heartRate").textContent = heartRate;
+        const status = document.getElementById("status");
+        const medicineForRelief = document.getElementById("medicineForRelief");
+  
+        let message = "";
+        let className = "normal";
+        let reliefMedicine = "No medicine required. Stay healthy! 🥦";
+  
+        if (heartRate < 60) {
+          message = "⚠️ Low Heart Rate! (Bradycardia)";
+          className = "alert";
+          reliefMedicine = medicinesDatabase["low heart rate"].join(", ");
+        } else if (heartRate > 100) {
+          message = "⚠️ High Heart Rate! (Tachycardia)";
+          className = "alert";
+          reliefMedicine = medicinesDatabase["high heart rate"].join(", ");
+        } else {
+          message = "✅ Normal Heart Rate";
+          className = "normal";
+        }
+  
+        status.textContent = message;
+        status.className = className;
+        medicineForRelief.textContent = reliefMedicine;
+  
       } catch (error) {
-        console.error("Error fetching sensor data:", error);
+        console.error("Error fetching heart rate data:", error);
       }
     }
-
-    // Fetch Data Every 5 Seconds
-    setInterval(fetchSensorData, 5000);
-
+  
+    setInterval(updateHeartRateFromSensor, 5000);
+    updateHeartRateFromSensor(); // Call immediately on load
   </script>
+  
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="A real-time health monitoring system tracking heart rate and body temperature, providing dietary recommendations.">
-  <link rel="icon" href="favicon.ico"> <!-- Add a favicon -->
+  <link rel="icon" href="favicon.ico"> 
   <title>Health Monitoring System</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,15 +15,15 @@
 
   <main>
 
-    <!-- Health Parameters Display -->
     <section id="readings">
       <h2>Health Parameters</h2>
       <p><strong>Adults (18-65 years)</strong></p>
       <p>Heart Rate: <span id="heartRate">Loading...</span> BPM</p>
       <p id="heartCondition"></p>
+      <p>Body Temperature: <span id="temperature">Loading...</span> °C</p>
+      <p id="tempCondition"></p>
     </section>
 
-    <!-- Dietary Recommendations -->
     <section id="recommendations">
       <h2>Dietary Recommendations</h2>
       <ul id="dietList">
@@ -64,15 +64,14 @@
 <script>
   async function fetchSensorData() {
     try {
-        const response = await fetch("http://192.168.0.103"); // Replace with your ESP32's IP
+        const response = await fetch("http://192.168.114.90"); // Replace with your ESP32's IP
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("Received Data:", data); // Debugging log
+        console.log("Received Data:", data); 
 
-        // ✅ Update Heart Rate (Check if exists in response)
         if (data.heartRate !== undefined) {
             document.getElementById("heartRate").innerText = data.heartRate.toFixed(2) + " BPM";
             analyzeHeartRate(data.heartRate);
@@ -80,7 +79,6 @@
             document.getElementById("heartRate").innerText = "N/A";
         }
 
-        // ✅ Update Temperature (Check if exists in response)
         if (data.temperature !== undefined) {
             document.getElementById("temperature").innerText = data.temperature.toFixed(2) + " °C";
             analyzeTemperature(data.temperature);
@@ -95,7 +93,7 @@
     }
 }
 
-// ✅ Analyze Heart Rate and Provide Feedback
+// Analyze heart rate and provide feedback
 function analyzeHeartRate(heartRate) {
     const conditionText = document.getElementById("heartCondition");
     const heartHealthDiet = document.getElementById("heartHealthDiet");
@@ -104,36 +102,19 @@ function analyzeHeartRate(heartRate) {
     if (heartRate >= 60 && heartRate <= 100) {
         conditionText.innerHTML = "<span style='color: green;'>Normal Heart Rate ✅</span>";
         heartHealthDiet.style.display = "none";
-        medicationAdvice.style.display = "none"; // Hide medication advice
+        medicationAdvice.style.display = "none"; 
     } else if (heartRate < 60) {
         conditionText.innerHTML = "<span style='color: blue;'>Low Heart Rate ⚠️ - Consider exercise and hydration.</span>";
         heartHealthDiet.style.display = "block";
-        medicationAdvice.style.display = "none"; // Hide medication advice
+        medicationAdvice.style.display = "none"; 
     } else {
         conditionText.innerHTML = "<span style='color: red;'>High Heart Rate ⚠️ - Rest and monitor.</span>";
         heartHealthDiet.style.display = "block";
-        medicationAdvice.style.display = "block"; // Show medication advice
-
-        // ✅ Display medication advice when heart rate is high
-        medicationAdvice.innerHTML = `
-            <b>⚕️ High Heart Rate Medication Advice:</b><br>
-            If your heart rate is consistently high (tachycardia), the best medication depends on the underlying cause and should be taken only under a doctor's prescription.<br>
-            <ul>
-                <li><b>Beta-Blockers</b> (e.g., Metoprolol, Propranolol, Atenolol) - Slows heart rate.</li>
-                <li><b>Calcium Channel Blockers</b> (e.g., Diltiazem, Verapamil) - Helps lower blood pressure.</li>
-                <li><b>Anti-Arrhythmic Drugs</b> (e.g., Amiodarone, Flecainide) - Used for irregular heart rhythms.</li>
-                <li><b>Ivabradine</b> - Reduces heart rate without affecting blood pressure.</li>
-                <li><b>Digoxin</b> - Strengthens heart contractions and slows heart rate.</li>
-            </ul>
-            <b>Important Notes:</b><br>
-            - Always consult a doctor before taking any medication.<br>
-            - High heart rate can be caused by stress, dehydration, fever, thyroid issues, or heart conditions.<br>
-            - Lifestyle changes like deep breathing, hydration, and avoiding stimulants (caffeine, nicotine) can also help.<br>
-        `;
+        medicationAdvice.style.display = "block"; 
     }
 }
 
-// ✅ Analyze Temperature and Provide Feedback
+// Analyze temperature and provide feedback
 function analyzeTemperature(temperature) {
     const tempConditionText = document.getElementById("tempCondition");
 
@@ -146,12 +127,9 @@ function analyzeTemperature(temperature) {
     }
 }
 
-// ✅ Fetch Data Every 20 Seconds
-setInterval(fetchSensorData, 20000);
+setInterval(fetchSensorData, 9000);
 
-// ✅ Fetch Data When Page Loads
 fetchSensorData();
-
 
 </script>
 
